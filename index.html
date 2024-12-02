@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intesa Vincente</title>
+</head>
+<body>
+    <h1>Intesa Vincente</h1>
+    <div id="parola">Parola: Amicizia</div>
+    <div id="timer">Tempo: 30</div>
+    <button id="stopBtn">Indovinato!</button>
+    <button id="restartBtn">Riavvia Timer</button>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        // Aggiorna il timer sullo schermo
+        socket.on('timerUpdate', (time) => {
+            document.getElementById('timer').innerText = `Tempo: ${time}`;
+        });
+
+        // Mostra messaggio quando il tempo è scaduto
+        socket.on('timeUp', () => {
+            alert("Tempo scaduto!");
+        });
+
+        // Mostra messaggio quando il timer si ferma
+        socket.on('timerStopped', () => {
+            alert("Parola indovinata!");
+        });
+
+        // Ferma il timer
+        document.getElementById('stopBtn').addEventListener('click', () => {
+            socket.emit('stopTimer');
+        });
+
+        // Riavvia il timer
+        document.getElementById('restartBtn').addEventListener('click', () => {
+            socket.emit('restartTimer');
+        });
+    </script>
+</body>
+</html>
